@@ -7,7 +7,7 @@ const {
   deleteUser,
   addFriend,
   removeFriend,
-} = require('../controllers/userController');
+} = require('../../controllers/userController');
 
 router.route('/').get(async (req, res) => {
   try {

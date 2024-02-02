@@ -2,7 +2,7 @@ const router = require('express').Router();
 const {
   createReaction,
   deleteReaction,
-} = require('../controllers/reactionController');
+} = require('../../controllers/reactionController');
 
 router.route('/:thoughtId/reactions').post(async (req, res) => {
   try {

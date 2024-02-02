@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const ReactionSchema = new mongoose.Schema({
-  reactionId: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: () => new mongoose.Types.ObjectId(),
-  },
+  reactionId: mongoose.Types.ObjectId,
   reactionBody: {
     type: String,
     required: true,
@@ -21,4 +18,4 @@ const ReactionSchema = new mongoose.Schema({
   },
 });
 
-module.exports = ReactionSchema;
+module.exports = { ReactionSchema };
