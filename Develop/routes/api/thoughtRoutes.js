@@ -1,4 +1,4 @@
-const Thought = require('../models/Thought');
+const Thought = require("../models/Thought");
 
 const getAllThoughts = async (req, res) => {
   try {
@@ -11,10 +11,10 @@ const getAllThoughts = async (req, res) => {
 
 const getSingleThought = async (req, res) => {
   try {
-    const thought = await Thought.findById(req.params.id).populate('reactions');
+    const thought = await Thought.findById(req.params.id).populate("reactions");
 
     if (!thought) {
-      return res.status(404).json({ message: 'Thought not found' });
+      return res.status(404).json({ message: "Thought not found" });
     }
 
     res.json(thought);
@@ -32,7 +32,7 @@ const createThought = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     user.thoughts.push(newThought._id);
@@ -53,7 +53,7 @@ const updateThought = async (req, res) => {
     );
 
     if (!updatedThought) {
-      return res.status(404).json({ message: 'Thought not found' });
+      return res.status(404).json({ message: "Thought not found" });
     }
 
     res.json(updatedThought);
@@ -67,10 +67,10 @@ const deleteThought = async (req, res) => {
     const deletedThought = await Thought.findByIdAndDelete(req.params.id);
 
     if (!deletedThought) {
-      return res.status(404).json({ message: 'Thought not found' });
+      return res.status(404).json({ message: "Thought not found" });
     }
 
-    res.json({ message: 'Thought deleted' });
+    res.json({ message: "Thought deleted" });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -81,7 +81,7 @@ const createReaction = async (req, res) => {
     const thought = await Thought.findById(req.params.thoughtId);
 
     if (!thought) {
-      return res.status(404).json({ message: 'Thought not found' });
+      return res.status(404).json({ message: "Thought not found" });
     }
 
     thought.reactions.push(req.body);
@@ -98,11 +98,13 @@ const deleteReaction = async (req, res) => {
     const thought = await Thought.findById(req.params.thoughtId);
 
     if (!thought) {
-      return res.status(404).json({ message: 'Thought not found' });
+      return res.status(404).json({ message: "Thought not found" });
     }
 
     const reactionId = req.body.reactionId;
-    thought.reactions = thought.reactions.filter((reaction) => reaction.reactionId.toString() !== reactionId);
+    thought.reactions = thought.reactions.filter(
+      (reaction) => reaction.reactionId.toString() !== reactionId
+    );
     await thought.save();
 
     res.json(thought);

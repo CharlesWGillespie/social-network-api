@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -12,11 +12,11 @@ const getAllUsers = async (req, res) => {
 const getSingleUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
-      .populate('thoughts')
-      .populate('friends');
+      .populate("thoughts")
+      .populate("friends");
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json(user);
@@ -43,7 +43,7 @@ const updateUser = async (req, res) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json(updatedUser);
@@ -57,13 +57,13 @@ const deleteUser = async (req, res) => {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
 
     if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // BONUS: Remove associated thoughts
     await Thought.deleteMany({ _id: { $in: deletedUser.thoughts } });
 
-    res.json({ message: 'User and thoughts deleted' });
+    res.json({ message: "User and thoughts deleted" });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -75,7 +75,7 @@ const addFriend = async (req, res) => {
     const friend = await User.findById(req.params.friendId);
 
     if (!user || !friend) {
-      return res.status(404).json({ message: 'User or friend not found' });
+      return res.status(404).json({ message: "User or friend not found" });
     }
 
     user.friends.push(friend._id);
@@ -93,10 +93,12 @@ const removeFriend = async (req, res) => {
     const friendId = req.params.friendId;
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    user.friends = user.friends.filter((friend) => friend.toString() !== friendId);
+    user.friends = user.friends.filter(
+      (friend) => friend.toString() !== friendId
+    );
     await user.save();
 
     res.json(user);

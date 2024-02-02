@@ -1,7 +1,11 @@
-const router = require('express').Router();
-const { createReaction, deleteReaction } = require('../controllers/reactionController');
+const router = require("express").Router();
+const {
+  createReaction,
+  deleteReaction,
+} = require("../controllers/reactionController");
 
-router.route('/:thoughtId/reactions')
+router
+  .route("/:thoughtId/reactions")
   .post(async (req, res) => {
     try {
       const result = await createReaction(req.params.thoughtId, req.body);
@@ -12,7 +16,10 @@ router.route('/:thoughtId/reactions')
   })
   .delete(async (req, res) => {
     try {
-      const result = await deleteReaction(req.params.thoughtId, req.body.reactionId);
+      const result = await deleteReaction(
+        req.params.thoughtId,
+        req.body.reactionId
+      );
       res.json(result);
     } catch (error) {
       res.status(500).json({ message: error.message });
