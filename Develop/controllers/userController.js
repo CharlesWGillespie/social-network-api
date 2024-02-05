@@ -1,4 +1,5 @@
-const User = require('../models/User');
+const User = require("../models/User");
+const Thought = require("../models/Thought");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -12,11 +13,11 @@ const getAllUsers = async (req, res) => {
 const getSingleUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
-      .populate('thoughts')
-      .populate('friends');
+      .populate("thoughts")
+      .populate("friends");
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json(user);
@@ -43,7 +44,7 @@ const updateUser = async (req, res) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.json(updatedUser);
@@ -57,13 +58,12 @@ const deleteUser = async (req, res) => {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
 
     if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Bonus: Remove user's associated thoughts
     await Thought.deleteMany({ _id: { $in: deletedUser.thoughts } });
 
-    res.json({ message: 'User deleted' });
+    res.json({ message: "User deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -75,15 +75,38 @@ const addFriend = async (req, res) => {
     const friend = await User.findById(req.params.friendId);
 
     if (!user || !friend) {
-      return res.status(404).json({ message: 'User or friend not found' });
+      return res.status(404).json({ message: "User or friend not found" });
     }
 
-    user.friends.push(friend._id);
-    await user.save();
+    if (!user.friends.includes(friend._id)) {
+      user.friends.push(friend._id);
+      await user.save();
 
-    res.json(user);
+      // Add the friend to the user's friends
+      if (!friend.friends.includes(user._id)) {
+        friend.friends.push(user._id);
+        await friend.save();
+      }
+
+      const message = `Users ${user.username} and ${friend.username} have added each other as friends.`;
+
+      return res.json({
+        message,
+        user: await User.findById(req.params.userId)
+          .populate("thoughts")
+          .populate("friends"),
+      });
+    }
+
+    return res.json({
+      message: "Users are already friends.",
+      user: await User.findById(req.params.userId)
+        .populate("thoughts")
+        .populate("friends"),
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Error adding friend" });
   }
 };
 
@@ -93,15 +116,22 @@ const removeFriend = async (req, res) => {
     const friendId = req.params.friendId;
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    user.friends = user.friends.filter((friend) => friend.toString() !== friendId);
+    user.friends = user.friends.filter(
+      (friend) => friend.toString() !== friendId
+    );
     await user.save();
 
-    res.json(user);
+    const updatedUser = await User.findById(req.params.userId)
+      .populate("thoughts")
+      .populate("friends");
+
+    res.json(updatedUser);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Error removing friend" });
   }
 };
 
