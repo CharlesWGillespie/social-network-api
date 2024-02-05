@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { ReactionSchema } = require("../models/Reaction"); // Adjust the path based on your actual project structure
+const { ReactionSchema } = require("../models/Reaction");
 
 const thoughtSchema = new mongoose.Schema({
   thoughtText: {
