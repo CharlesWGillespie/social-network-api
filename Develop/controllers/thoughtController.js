@@ -28,7 +28,7 @@ const createThought = async (req, res) => {
   try {
     const newThought = await Thought.create({
       ...req.body,
-      username: "Will", // Replace with the actual username or logic to get the username
+      username: "Will",
     });
 
     const userId = req.body.userId;

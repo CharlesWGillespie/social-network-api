@@ -82,7 +82,6 @@ const addFriend = async (req, res) => {
       user.friends.push(friend._id);
       await user.save();
 
-      // Add the friend to the user's friends
       if (!friend.friends.includes(user._id)) {
         friend.friends.push(user._id);
         await friend.save();
