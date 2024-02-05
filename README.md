@@ -63,7 +63,10 @@ This project is licensed under the MIT License - see the [MIT License](https://o
 
 ## Walkthrough Video
 
-Add a link to your walkthrough video here.
+
+https://github.com/CharlesWGillespie/social-network-api/assets/143773137/e54fa6c7-a004-4830-ac6d-fdb2872457e8
+
+
 
 ## Questions
 
